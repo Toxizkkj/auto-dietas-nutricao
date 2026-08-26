@@ -4,7 +4,6 @@ from google import genai
 from playwright.sync_api import sync_playwright
 
 def extrair_nomes_dietas(texto_bruto):
-    """Usa o Gemini para limpar o OCR do Google Lens e retornar uma lista com os nomes exatos."""
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         raise ValueError("Chave GEMINI_API_KEY não configurada.")
@@ -12,23 +11,24 @@ def extrair_nomes_dietas(texto_bruto):
     client = genai.Client(api_key=api_key)
 
     prompt = f"""
-    Você é um assistente de nutrição hospitalar.
-    Analise o texto abaixo capturado via OCR/Google Lens e extraia apenas os nomes das dietas.
-    Retorne ESTRITAMENTE um array JSON contendo apenas strings com os nomes corrigidos e em maiúsculo.
-    Ignore cabeçalhos, números de páginas ou sujeiras de OCR.
+    Extraia todos os nomes de dietas presentes no texto abaixo. 
+    Retorne uma lista JSON de strings contendo apenas os nomes em maiúsculas (ex: ["BRANDA", "BRANDA CONSTIPANTE"]).
 
-    Texto bruto:
+    Texto:
     {texto_bruto}
     """
 
-    print("Processando texto do Google Lens com Gemini...")
+    print("Processando texto com Gemini...")
     response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=prompt
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config={
+            "response_mime_type": "application/json"
+        }
     )
 
-    texto_limpo = response.text.replace("```json", "").replace("```", "").strip()
-    return json.loads(texto_limpo)
+    print("Resposta bruta da IA:", response.text)
+    return json.loads(response.text)
 
 def cadastrar_dietas_no_sistema(lista_dietas, url_sistema, usuario, senha):
     """Automatiza o preenchimento no sistema hospitalar."""
@@ -103,10 +103,12 @@ if __name__ == "__main__":
     dietas_extraidas = extrair_nomes_dietas(conteudo_lens)
     print("Dietas identificadas:", dietas_extraidas)
 
-    # 2. Credenciais e URL (ao rodar na empresa)
-    URL_SISTEMA = "http://192.168.0.253/nutricao/dietas"
+    if not dietas_extraidas:
+        print("Erro: Nenhuma dieta foi identificada no arquivo dietas_lens.txt. Verifique o conteúdo do arquivo.")
+        exit(1)
+
+    URL_SISTEMA = "http://192.168.0.253/login"
     USUARIO = "yurijaciel2@gmail.com"
     SENHA = "180725"
 
-    # Descomente a linha abaixo quando for rodar na máquina do trabalho:
     cadastrar_dietas_no_sistema(dietas_extraidas, URL_SISTEMA, USUARIO, SENHA)
