@@ -1,38 +1,19 @@
-# 🏥 Hospital Diet Automation — Playwright & Gemini LLM
+#  Hospital Diet Automation — Playwright & Gemini LLM
 
-Automação inteligente de processos (RPA) integrada a modelos de linguagem (LLMs) para extração, estruturação e cadastro automático de dietas hospitalares em sistemas legados.
+Automação inteligente de processos (RPA) com integração a LLM para extração, padronização e inserção automatizada de prescrições dietéticas em sistema hospitalar legado.
 
----
+##  Problema de Negócio
+A transcrição diária de relatórios impressos de nutrição para o sistema hospitalar era manual, lenta e suscetível a erros de digitação em dietas com restrições severas. O desafio envolvia lidar com dados não estruturados gerados via OCR móvel (Google Lens) com ruídos e quebras de linha.
 
-## 📌 Contexto & Problema de Negócio
-No setor de nutrição hospitalar, a transcrição de relatórios impressos/OCR para o sistema de gestão hospitalar consumia horas diárias de trabalho manual, gerando gargalos operacionais e risco de erro humano na alimentação de prescrições dietéticas críticas.
+##  Solução
+* **Parsing com IA Generativa**: Utilização do `gemini-3.6-flash` com saída estruturada em JSON (`response_mime_type="application/json"`) para filtrar cabeçalhos, corrigir ruídos e padronizar nomenclaturas clínicas.
+* **Automação Web com Playwright**: Script resiliente que autentica, navega pela árvore de menus do sistema interno e cadastra cada dieta preenchendo categorias, grupos e status ativo.
 
-## 💡 Solução Desenvolvida
-Pipeline automatizado ponta a ponta que:
-1. **Ingere texto bruto via OCR** (Google Lens) contendo ruídos, quebras de linha e desformatação.
-2. **Processa e Estrutura via IA Generativa**: Utiliza o modelo `gemini-3.6-flash` com saída forçada em JSON (`application/json`) para filtrar dados irrelevantes e padronizar as nomenclaturas.
-3. **Executa RPA com Playwright**: Navega pelo sistema interno autenticado, preenche os formulários de cadastro e persiste os dados de forma assíncrona e resiliente.
+##  Tecnologias
+* **Python 3.11+**
+* **Google GenAI SDK** (`gemini-3.6-flash`)
+* **Playwright** (Sync API)
 
----
-
-## 🛠️ Tecnologias Utilizadas
-* **Linguagem**: Python 3.11+
-* **Automação Web**: Playwright (Sync API)
-* **IA & LLM**: Google GenAI SDK (`gemini-3.6-flash`)
-* **Gestão de Ambiente**: Python Virtualenv / Dotenv
-
----
-
-## ⚙️ Arquitetura do Fluxo
-
+## ⚙️ Fluxo da Aplicação
 ```text
-[ Documento Físico / Foto ]
-           │
-           ▼
-[ Google Lens / OCR Bruto ]
-           │
-           ▼
-[ Gemini 3.6 Flash ] ──> (Limpeza, Deduplicação & JSON Estruturado)
-           │
-           ▼
-[ Playwright Worker ] ──> (Login ➔ Navegação ➔ Preenchimento Form ➔ Persistência)
+Foto/Relatório ➔ Google Lens (OCR) ➔ Gemini LLM (Limpeza/JSON) ➔ Playwright (Cadastro Web)
