@@ -1,3 +1,5 @@
+# Projeto Descontinuado / Consolidado: Este bot foi integrado à Central de Automações RPA. O desenvolvimento ativo continua por lá.
+
 #  Hospital Diet Automation — Playwright & Gemini LLM
 
 Automação inteligente de processos (RPA) com integração a LLM para extração, padronização e inserção automatizada de prescrições dietéticas em sistema hospitalar legado.
@@ -14,6 +16,6 @@ A transcrição diária de relatórios impressos de nutrição para o sistema ho
 * **Google GenAI SDK** (`gemini-3.6-flash`)
 * **Playwright** (Sync API)
 
-## ⚙️ Fluxo da Aplicação
+## Fluxo da Aplicação
 ```text
 Foto/Relatório ➔ Google Lens (OCR) ➔ Gemini LLM (Limpeza/JSON) ➔ Playwright (Cadastro Web)
