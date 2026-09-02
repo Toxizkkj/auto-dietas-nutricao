@@ -1,4 +1,4 @@
-# Projeto Descontinuado / Consolidado: Este bot foi integrado à Central de Automações RPA. O desenvolvimento ativo continua por lá.
+# Projeto Consolidado: Este bot foi integrado à Central de Automações RPA. O desenvolvimento ativo continua por lá.
 
 #  Hospital Diet Automation — Playwright & Gemini LLM
 
